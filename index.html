@@ -14,40 +14,77 @@
       integrity="sha384-wvfXpqpZZVQGK6TAh5PVlGOfQNHSoD2xbE+QkPxCAFlNEevoEH3Sl0sibVcOQVnN"
       crossorigin="anonymous"
     />
+    <link rel="stylesheet" href="./app.css" />
     <title>Daily Expenses</title>
   </head>
   <body>
-
     <nav>
-        <div class="nav-wrapper">
-            <div class="container">
-                <a href="#" class="brand-logo center">Daily Expenses</a>
-                <ul class="right">
-                    <li><a href="#" class="clear-btn btn red lighten-3">Remove All</a></li>
-                </ul>
-            </div>
-        </div>    
-    </nav>
-    
-    <div class="container">
-        <div class="card">
-            <div class="card-content">
-                <span class="card-title">Add Item / Item Description</span>
-                <form class="col" action="">
-                    <div class="row">
-                        <div class="input-field col s6">
-                            <input type="text" placeholder="Add Item Name/Description" id="item-name">
-                            <label for="item-name">Item</label>
-                        </div>
-                        <div class="input-field col s6">
-                            <input type="text" placeholder="Add Price" id="item-price">
-                            <label for="item-name">Price</label>
-                        </div>
-                    </div>
-                    
-                </form>
-            </div>
+      <div class="nav-wrapper">
+        <div class="container">
+          <a href="#" class="brand-logo center">Daily Expenses</a>
+          <ul class="right">
+            <li>
+              <a href="#" class="clear-btn btn red lighten-3">Remove All</a>
+            </li>
+          </ul>
         </div>
+      </div>
+    </nav>
+
+    <div class="container">
+      <div class="card">
+        <div class="card-content">
+          <span class="card-title">Add Item / Item Description</span>
+          <form class="col" action="">
+            <div class="row">
+              <div class="input-field col s12">
+                <input
+                  type="text"
+                  placeholder="Add Item Name/Description"
+                  id="item-name"
+                />
+                <label for="item-name">Item</label>
+              </div>
+              <div class="input-field col s12">
+                <input type="text" placeholder="Add Price" id="item-price" />
+                <label for="item-name">Price</label>
+              </div>
+              <!-- <button class="add-btn btn orange darken-1">
+                <i class="fa fa-pencil-square-o"></i> Update
+              </button>
+              <button class="add-btn btn red darken-1">
+                <i class="fa fa-remove"></i> Delete
+              </button>
+              <button class="add-btn btn grey lighten-1">
+                <i class="fa fa-chevron-circle-left"></i> Back
+              </button> -->
+              <button
+                class="btn-floating btn-large waves-effect waves-light red lighten-1 right"
+              >
+                <i class="fa fa-plus"></i>
+              </button>
+            </div>
+          </form>
+        </div>
+      </div>
+
+      <!-- Total Expenses -->
+      <h3 class="center-align">Total Spends: <span class="total-spends">0</span></h3>
+
+      <ul class="collection" id="item-list">
+        <li class="collection-item" id="item-0">
+          <strong>Gas: </strong> <em>120 dollar</em>
+          <a href="#" class="secondary-content">
+            <i class="fa fa-pencil"></i>
+          </a>
+        </li>
+        <li class="collection-item" id="item-0">
+          <strong>Steak Dinner: </strong> <em>40 dollar</em>
+          <a href="#" class="secondary-content">
+            <i class="fa fa-pencil"></i>
+          </a>
+        </li>
+      </ul>
     </div>
     <!-- Compiled and minified JavaScript -->
     <script
@@ -56,5 +93,6 @@
       crossorigin="anonymous"
     ></script>
     <script src="https://cdnjs.cloudflare.com/ajax/libs/materialize/1.0.0/js/materialize.min.js"></script>
+    <script src="./app.js"></script>
   </body>
 </html>
