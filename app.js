@@ -18,6 +18,7 @@ const ItemCtrl = (function () {
     totalSpends: 0,
   };
 
+  // Public methods
   return {
     getItems: function () {
       return data.items;
@@ -33,6 +34,7 @@ const UICtrl = (function () {
   const UISelectors = {
     itemList: "#item-list"
   }
+  // Public Methods
   return {
     populateToList: function (items) {
       console.log("Helllooooo")
@@ -47,11 +49,19 @@ const UICtrl = (function () {
       });
       document.querySelector(UISelectors.itemList).innerHTML = innerUL;
     },
+    getSelectors: function(){
+      return UISelectors;
+    }
   };
 })();
 
 // App Controller
 const App = (function (ItemCtrl, UICtrl) {
+  // load event listeners
+  const loadEventListeners = function(){
+    // Get UI selectors
+    const UISelectors = UICtrl.getSelectors();
+  }
   return {
     init: function () {
       const items = ItemCtrl.getItems();
