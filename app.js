@@ -38,6 +38,15 @@ const ItemCtrl = (function () {
     logData: function () {
       return data;
     },
+    getTotalSpends: function () {
+      let total = 0;
+      data.items.forEach((item) => {
+        total += item.price;
+      });
+      data.totalSpends = total;
+
+      return data.totalSpends;
+    },
   };
 })();
 
@@ -48,6 +57,7 @@ const UICtrl = (function () {
     addBtn: ".add-btn",
     itemName: "#item-name",
     itemPrice: "#item-price",
+    totalSpend: ".total-spends",
   };
   // Public Methods
   return {
@@ -73,7 +83,7 @@ const UICtrl = (function () {
       return UISelectors;
     },
     addItemToList: function (item) {
-      document.querySelector(UISelectors.itemList).style.display = "block"
+      document.querySelector(UISelectors.itemList).style.display = "block";
       const li = document.createElement("li");
       li.className = "collection-item";
       li.id = `item-${item.id}`;
@@ -93,6 +103,9 @@ const UICtrl = (function () {
     },
     hideList: function () {
       document.querySelector(UISelectors.itemList).style.display = "none";
+    },
+    showTotalSpends: function (totalSpend) {
+      document.querySelector(UISelectors.totalSpend).innerHTML = totalSpend;
     },
   };
 })();
@@ -131,6 +144,12 @@ const App = (function (ItemCtrl, UICtrl) {
       // Add new Item to our ul list in UI
       UICtrl.addItemToList(newItem);
 
+      // Get total spend from Item Ctrl
+      const totalSpend = ItemCtrl.getTotalSpends();
+
+      // Add total spends to UI
+      UICtrl.showTotalSpends(totalSpend);
+
       // Clear input fields after adding new item
       UICtrl.clearInputs();
     }
@@ -143,7 +162,7 @@ const App = (function (ItemCtrl, UICtrl) {
       const items = ItemCtrl.getItems();
       // check if items list is empty
       if (items.length === 0) {
-        // Hide ul items 
+        // Hide ul items
         UICtrl.hideList();
       } else {
         // Populate list with items
