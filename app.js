@@ -23,18 +23,6 @@ const ItemCtrl = (function () {
     getItems: function () {
       return data.items;
     },
-    addItem: function (name, price) {
-      let id;
-      // Create id for new item(last items added id + 1 or 0 if items list is empty)
-      if (data.items.length > 0) {
-        id = data.items[data.items.length - 1].id + 1;
-      } else {
-        id = 0;
-      }
-      const newItem = new Item(id, name, price);
-      data.items.push(newItem);
-      return newItem;
-    },
     logData: function () {
       return data;
     },
@@ -47,6 +35,32 @@ const ItemCtrl = (function () {
 
       return data.totalSpends;
     },
+    getItemById: function (itemId) {
+      return data.items.find(function (item) {
+        return item.id === itemId;
+      });
+    },
+    getCurrentName: function () {
+      return data.currentItem.name;
+    },
+    getCurrentPrice: function () {
+      return data.currentItem.price;
+    },
+    addItem: function (name, price) {
+      let id;
+      // Create id for new item(last items added id + 1 or 0 if items list is empty)
+      if (data.items.length > 0) {
+        id = data.items[data.items.length - 1].id + 1;
+      } else {
+        id = 0;
+      }
+      const newItem = new Item(id, name, price);
+      data.items.push(newItem);
+      return newItem;
+    },
+    setCurrentItem: function (item) {
+      data.currentItem = item;
+    },
   };
 })();
 
@@ -58,6 +72,9 @@ const UICtrl = (function () {
     itemName: "#item-name",
     itemPrice: "#item-price",
     totalSpend: ".total-spends",
+    updateBtn: ".update-btn",
+    deleteBtn: ".delete-btn",
+    backBtn: ".back-btn",
   };
   // Public Methods
   return {
@@ -89,7 +106,7 @@ const UICtrl = (function () {
       li.id = `item-${item.id}`;
       li.innerHTML = `<strong>${item.name}: </strong> <em>${item.price} dollar</em>
         <a href="#" class="secondary-content">
-          <i class="fa fa-pencil"></i>
+          <i class="edit-item fa fa-pencil"></i>
         </a>
       `;
       // Insert Item
@@ -107,6 +124,28 @@ const UICtrl = (function () {
     showTotalSpends: function (totalSpend) {
       document.querySelector(UISelectors.totalSpend).innerHTML = totalSpend;
     },
+    clearEditState: function () {
+      this.clearInputs();
+      document.querySelector(UISelectors.updateBtn).style.display = "none";
+      document.querySelector(UISelectors.deleteBtn).style.display = "none";
+      document.querySelector(UISelectors.backBtn).style.display = "none";
+      document.querySelector(UISelectors.addBtn).style.display = "inline";
+    },
+    showEditState: function () {
+      document.querySelector(UISelectors.updateBtn).style.display = "inline";
+      document.querySelector(UISelectors.deleteBtn).style.display = "inline";
+      document.querySelector(UISelectors.backBtn).style.display = "inline";
+      document.querySelector(UISelectors.addBtn).style.display = "none";
+    },
+    fillFormToUpdate: function () {
+      document.querySelector(
+        UISelectors.itemName
+      ).value = ItemCtrl.getCurrentName();
+      document.querySelector(
+        UISelectors.itemPrice
+      ).value = ItemCtrl.getCurrentPrice();
+      UICtrl.showEditState();
+    },
   };
 })();
 
@@ -121,6 +160,20 @@ const App = (function (ItemCtrl, UICtrl) {
     document
       .querySelector(UISelectors.addBtn)
       .addEventListener("click", itemAddSubmit);
+
+    // Add edit icon click event
+    document
+      .querySelector(UISelectors.itemList)
+      .addEventListener("click", function (e) {
+        if (e.target.classList.contains("edit-item")) {
+          const listID = e.target.parentNode.parentNode.id;
+          const id = parseInt(listID.split("-")[1]);
+          const itemToEdit = ItemCtrl.getItemById(id);
+          console.log(itemToEdit);
+          ItemCtrl.setCurrentItem(itemToEdit);
+          UICtrl.fillFormToUpdate(itemToEdit);
+        }
+      });
   };
   // console.log(itemAddSubmit)
 
@@ -158,8 +211,11 @@ const App = (function (ItemCtrl, UICtrl) {
   //Public Methods
   return {
     init: function () {
+      // Clear edit state
+      UICtrl.clearEditState();
       // Fetch items from data sturcture
       const items = ItemCtrl.getItems();
+      //
       // check if items list is empty
       if (items.length === 0) {
         // Hide ul items
