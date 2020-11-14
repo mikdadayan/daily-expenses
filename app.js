@@ -61,6 +61,24 @@ const ItemCtrl = (function () {
     setCurrentItem: function (item) {
       data.currentItem = item;
     },
+    updateCurrentItem: function (updatedName, updatedPrice) {
+      let updatedItem;
+      data.items.map(function (item) {
+        if (item.id === data.currentItem.id) {
+          item.name = updatedName;
+          item.price = updatedPrice;
+          // return { ...item, name: updatedName, price: updatedPrice };
+          updatedItem = item;
+          return item;
+        }
+        updatedItem;
+        return item;
+      });
+      return updatedItem;
+    },
+    clearCurrentItem: function () {
+      data.currentItem = null;
+    },
   };
 })();
 
@@ -68,6 +86,7 @@ const ItemCtrl = (function () {
 const UICtrl = (function () {
   const UISelectors = {
     itemList: "#item-list",
+    listItems: "#item-list li",
     addBtn: ".add-btn",
     itemName: "#item-name",
     itemPrice: "#item-price",
@@ -146,6 +165,24 @@ const UICtrl = (function () {
       ).value = ItemCtrl.getCurrentPrice();
       UICtrl.showEditState();
     },
+    updateList: function (item) {
+      let listItems = document.querySelectorAll(UISelectors.listItems);
+
+      // Turn Node List into array
+      listItems = Array.from(listItems);
+
+      listItems.forEach((listItem) => {
+        const itemID = listItem.getAttribute("id");
+        if (itemID === `item-${item.id}`) {
+          document.querySelector(
+            `#${itemID}`
+          ).innerHTML = `<strong>${item.name}: </strong> <em>${item.price} dollar</em>
+          <a href="#" class="secondary-content">
+            <i class="edit-item fa fa-pencil"></i>
+          </a>`;
+        }
+      });
+    },
   };
 })();
 
@@ -164,23 +201,18 @@ const App = (function (ItemCtrl, UICtrl) {
     // Add edit icon click event
     document
       .querySelector(UISelectors.itemList)
-      .addEventListener("click", function (e) {
-        if (e.target.classList.contains("edit-item")) {
-          const listID = e.target.parentNode.parentNode.id;
-          const id = parseInt(listID.split("-")[1]);
-          const itemToEdit = ItemCtrl.getItemById(id);
-          console.log(itemToEdit);
-          ItemCtrl.setCurrentItem(itemToEdit);
-          UICtrl.fillFormToUpdate(itemToEdit);
-        }
-      });
+      .addEventListener("click", itemEditClick);
+
+    document
+      .querySelector(UISelectors.updateBtn)
+      .addEventListener("click", itemUpdateSubmit);
   };
   // console.log(itemAddSubmit)
 
   // Add item submit
   const itemAddSubmit = function (e) {
-    // Get form from UI Controller
     e.preventDefault();
+    // Get form from UI Controller
     const inputs = UICtrl.getItemInputs();
     // Validation for inputs values
     if (
@@ -207,6 +239,53 @@ const App = (function (ItemCtrl, UICtrl) {
       UICtrl.clearInputs();
     }
   };
+
+  // Item Edit icon click
+  function itemEditClick(e) {
+    if (e.target.classList.contains("edit-item")) {
+      const listID = e.target.parentNode.parentNode.id;
+      const id = parseInt(listID.split("-")[1]);
+      const itemToEdit = ItemCtrl.getItemById(id);
+      console.log(itemToEdit);
+      ItemCtrl.setCurrentItem(itemToEdit);
+      UICtrl.fillFormToUpdate(itemToEdit);
+    }
+  }
+
+  function itemUpdateSubmit(e) {
+    e.preventDefault();
+    // Get form from UI Controller
+    const inputs = UICtrl.getItemInputs();
+    // Validation for inputs values
+
+    if (
+      inputs.name.value !== "" &&
+      typeof Number(inputs.price.value) === "number" &&
+      parseInt(inputs.price.value) > 0
+    ) {
+      const updatedItem = ItemCtrl.updateCurrentItem(
+        inputs.name.value,
+        parseInt(inputs.price.value)
+      );
+      console.log(updatedItem);
+
+      const totalSpends = ItemCtrl.getTotalSpends();
+
+      ItemCtrl.clearCurrentItem();
+
+      // Clear edit state
+      UICtrl.clearEditState();
+
+      // Clear input fields after adding new item
+      UICtrl.clearInputs();
+
+      // To show up updated list 
+      UICtrl.updateList(updatedItem);
+
+      // Show total spends after item update 
+      UICtrl.showTotalSpends(totalSpends);
+    }
+  }
 
   //Public Methods
   return {
