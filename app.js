@@ -63,16 +63,13 @@ const ItemCtrl = (function () {
     },
     updateCurrentItem: function (updatedName, updatedPrice) {
       let updatedItem;
-      data.items.map(function (item) {
+      data.items.forEach(function (item) {
         if (item.id === data.currentItem.id) {
           item.name = updatedName;
           item.price = updatedPrice;
           // return { ...item, name: updatedName, price: updatedPrice };
           updatedItem = item;
-          return item;
         }
-        updatedItem;
-        return item;
       });
       return updatedItem;
     },
@@ -85,13 +82,14 @@ const ItemCtrl = (function () {
 // UI Controller
 const UICtrl = (function () {
   const UISelectors = {
+    itemForm: ".item-form",
     itemList: "#item-list",
     listItems: "#item-list li",
     addBtn: ".add-btn",
     itemName: "#item-name",
     itemPrice: "#item-price",
     totalSpend: ".total-spends",
-    updateBtn: ".update-btn",
+    updateBtn: "#update-btn",
     deleteBtn: ".delete-btn",
     backBtn: ".back-btn",
   };
@@ -193,6 +191,12 @@ const App = (function (ItemCtrl, UICtrl) {
     // Get UI selectors
     const UISelectors = UICtrl.getSelectors();
 
+    document
+      .querySelector(UISelectors.itemForm)
+      .addEventListener("submit", function (e) {
+        console.log("Daaaaaa")
+        e.preventDefault();
+      });
     // Add item event
     document
       .querySelector(UISelectors.addBtn)
