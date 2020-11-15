@@ -206,6 +206,9 @@ const App = (function (ItemCtrl, UICtrl) {
     document
       .querySelector(UISelectors.updateBtn)
       .addEventListener("click", itemUpdateSubmit);
+    document
+      .querySelector(UISelectors.backBtn)
+      .addEventListener("click", discardItemChangeState);
   };
   // console.log(itemAddSubmit)
 
@@ -279,12 +282,25 @@ const App = (function (ItemCtrl, UICtrl) {
       // Clear input fields after adding new item
       UICtrl.clearInputs();
 
-      // To show up updated list 
+      // To show up updated list
       UICtrl.updateList(updatedItem);
 
-      // Show total spends after item update 
+      // Show total spends after item update
       UICtrl.showTotalSpends(totalSpends);
     }
+  }
+
+  function discardItemChangeState(e) {
+    e.preventDefault();
+
+    // Clear item details from ItemCtrl data currentItem
+    ItemCtrl.clearCurrentItem();
+
+    // Clear edit state
+    UICtrl.clearEditState();
+
+    // Clear input fields after adding new item
+    UICtrl.clearInputs();
   }
 
   //Public Methods
