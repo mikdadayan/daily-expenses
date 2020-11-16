@@ -1,4 +1,49 @@
 // Storage Controller
+const StorageCtrl = (function () {
+  return {
+    storeItem: function (item) {
+      let items = [];
+      // Check if there are any items in local storage
+      if (localStorage.getItem("items") === null) {
+        items = [];
+
+        // Push item into items
+        items.push(item);
+        localStorage.setItem("items", JSON.stringify(items));
+      } else {
+        items = JSON.parse(localStorage.getItem("items"));
+        items.push(item);
+        localStorage.setItem("items", JSON.stringify(items));
+      }
+    },
+    getItemsFromLS: function () {
+      let items = [];
+      if (localStorage.getItem("items") === null) {
+        items = [];
+        return items;
+      } else {
+        items = JSON.parse(localStorage.getItem("items"));
+        return items;
+      }
+    },
+    updateAndStoreItem: function (updatedItem) {
+      let items = [];
+      console.log(updatedItem);
+      // Check if there are any items in local storage
+      if (localStorage.getItem("items") !== null) {
+        items = JSON.parse(localStorage.getItem("items"));
+        items.forEach(function (item, index) {
+          if (item.id === updatedItem.id) {
+            items.splice(index, 1, updatedItem);
+          }
+        });
+        localStorage.setItem("items", JSON.stringify(items));
+      } else {
+        console.log("Oops there is not element in ls");
+      }
+    },
+  };
+})();
 
 // Item Controller
 const ItemCtrl = (function () {
@@ -9,11 +54,7 @@ const ItemCtrl = (function () {
   };
 
   const data = {
-    items: [
-      // { id: 0, name: "Steak Dinner", price: 25 },
-      // { id: 1, name: "Gas", price: 40 },
-      // { id: 2, name: "Mark Store", price: 45 },
-    ],
+    items: StorageCtrl.getItemsFromLS(),
     currentItem: null,
     totalSpends: 0,
   };
@@ -213,7 +254,7 @@ const UICtrl = (function () {
 })();
 
 // App Controller
-const App = (function (ItemCtrl, UICtrl) {
+const App = (function (ItemCtrl, UICtrl, StorageCtrl) {
   // load event listeners
   const loadEventListeners = function () {
     // Get UI selectors
@@ -270,6 +311,9 @@ const App = (function (ItemCtrl, UICtrl) {
       // Add new Item to our ul list in UI
       UICtrl.addItemToList(newItem);
 
+      // Add new item to ls
+      StorageCtrl.storeItem(newItem);
+
       // Get total spend from Item Ctrl
       const totalSpend = ItemCtrl.getTotalSpends();
 
@@ -309,6 +353,9 @@ const App = (function (ItemCtrl, UICtrl) {
         parseInt(inputs.price.value)
       );
       console.log(updatedItem);
+
+      // Set updated item into local storage
+      StorageCtrl.updateAndStoreItem(updatedItem);
 
       const totalSpends = ItemCtrl.getTotalSpends();
 
@@ -376,7 +423,8 @@ const App = (function (ItemCtrl, UICtrl) {
       UICtrl.clearEditState();
       // Fetch items from data sturcture
       const items = ItemCtrl.getItems();
-      //
+      // Get total Spends
+      ItemCtrl.getTotalSpends();
       // check if items list is empty
       if (items.length === 0) {
         // Hide ul items
@@ -386,10 +434,13 @@ const App = (function (ItemCtrl, UICtrl) {
         UICtrl.populateToList(items);
       }
 
+      // Show total spends on UI
+      UICtrl.showTotalSpends(ItemCtrl.getTotalSpends()); 
+
       // Load event listeners
       loadEventListeners();
     },
   };
-})(ItemCtrl, UICtrl);
+})(ItemCtrl, UICtrl, StorageCtrl);
 
 App.init();
