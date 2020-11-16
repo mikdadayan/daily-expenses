@@ -73,8 +73,25 @@ const ItemCtrl = (function () {
       });
       return updatedItem;
     },
+    deleteCurrentItem: function () {
+      let deletedItem;
+      let newItemsList = data.items.filter(function (item) {
+        if (item.id !== data.currentItem.id) {
+          return item;
+        }
+        deletedItem = item;
+      });
+      data.items = newItemsList;
+      console.log(deletedItem);
+      return deletedItem;
+    },
     clearCurrentItem: function () {
       data.currentItem = null;
+    },
+    removeAllItems: function () {
+      data.items = [];
+      data.currentItem = null;
+      totalSpends = 0;
     },
   };
 })();
@@ -92,6 +109,7 @@ const UICtrl = (function () {
     updateBtn: "#update-btn",
     deleteBtn: ".delete-btn",
     backBtn: ".back-btn",
+    clearBtn: ".clear-btn",
   };
   // Public Methods
   return {
@@ -181,6 +199,16 @@ const UICtrl = (function () {
         }
       });
     },
+    updateListAfterDelete: function (item) {
+      const itemID = `#item-${item.id}`;
+      console.log(itemID);
+      const itemToDelete = document.querySelector(itemID);
+      itemToDelete.remove();
+    },
+    deleteAllFromUI: function () {
+      document.querySelector(UISelectors.itemList).innerHTML = "";
+      document.querySelector(UISelectors.totalSpend).innerHTML = 0;
+    },
   };
 })();
 
@@ -194,7 +222,7 @@ const App = (function (ItemCtrl, UICtrl) {
     document
       .querySelector(UISelectors.itemForm)
       .addEventListener("submit", function (e) {
-        console.log("Daaaaaa")
+        console.log("Daaaaaa");
         e.preventDefault();
       });
     // Add item event
@@ -211,8 +239,14 @@ const App = (function (ItemCtrl, UICtrl) {
       .querySelector(UISelectors.updateBtn)
       .addEventListener("click", itemUpdateSubmit);
     document
+      .querySelector(UISelectors.deleteBtn)
+      .addEventListener("click", itemDeleteSubmit);
+    document
       .querySelector(UISelectors.backBtn)
       .addEventListener("click", discardItemChangeState);
+    document
+      .querySelector(UISelectors.clearBtn)
+      .addEventListener("click", deleteItemsSubmit);
   };
   // console.log(itemAddSubmit)
 
@@ -305,6 +339,34 @@ const App = (function (ItemCtrl, UICtrl) {
 
     // Clear input fields after adding new item
     UICtrl.clearInputs();
+  }
+
+  function itemDeleteSubmit(e) {
+    e.preventDefault();
+    const deletedItem = ItemCtrl.deleteCurrentItem();
+    ItemCtrl.clearCurrentItem();
+    // Clear item details from ItemCtrl data currentItem
+    ItemCtrl.clearCurrentItem();
+
+    // Clear edit state
+    UICtrl.clearEditState();
+
+    // Clear input fields after adding new item
+    UICtrl.clearInputs();
+
+    // Rerender list items after deleting
+    UICtrl.updateListAfterDelete(deletedItem);
+  }
+
+  function deleteItemsSubmit(e) {
+    e.preventDefault(e);
+    ItemCtrl.removeAllItems();
+    UICtrl.deleteAllFromUI();
+    UICtrl.hideList();
+    // Clear input fields after adding new item
+    UICtrl.clearInputs();
+    // Clear edit state
+    UICtrl.clearEditState();
   }
 
   //Public Methods
