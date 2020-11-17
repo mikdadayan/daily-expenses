@@ -42,6 +42,20 @@ const StorageCtrl = (function () {
         console.log("Oops there is not element in ls");
       }
     },
+    deleteFromItemStorage: function (id) {
+      let items = [];
+      if (localStorage.getItem("items") !== null) {
+        items = JSON.parse(localStorage.getItem("items"));
+        items.forEach(function (item, index) {
+          if (item.id === id) {
+            items.splice(index, 1);
+          }
+        });
+        localStorage.setItem("items", JSON.stringify(items));
+      } else {
+        console.log("Oops there is not element in ls");
+      }
+    },
   };
 })();
 
@@ -160,7 +174,7 @@ const UICtrl = (function () {
         innerUL += `<li class="collection-item" id="item-${item.id}">
         <strong>${item.name}: </strong> <em>${item.price} dollar</em>
         <a href="#" class="secondary-content">
-          <i class="fa fa-pencil"></i>
+          <i class="edit-item fa fa-pencil"></i>
         </a>
       </li>`;
       });
@@ -327,7 +341,10 @@ const App = (function (ItemCtrl, UICtrl, StorageCtrl) {
 
   // Item Edit icon click
   function itemEditClick(e) {
+    console.log("What the fuck")
+    console.log(e.target)
     if (e.target.classList.contains("edit-item")) {
+      console.log("fusck is this")
       const listID = e.target.parentNode.parentNode.id;
       const id = parseInt(listID.split("-")[1]);
       const itemToEdit = ItemCtrl.getItemById(id);
@@ -395,6 +412,8 @@ const App = (function (ItemCtrl, UICtrl, StorageCtrl) {
     // Clear item details from ItemCtrl data currentItem
     ItemCtrl.clearCurrentItem();
 
+    // Delete item from LS
+    StorageCtrl.deleteFromItemStorage(deletedItem.id);
     // Clear edit state
     UICtrl.clearEditState();
 
@@ -435,7 +454,7 @@ const App = (function (ItemCtrl, UICtrl, StorageCtrl) {
       }
 
       // Show total spends on UI
-      UICtrl.showTotalSpends(ItemCtrl.getTotalSpends()); 
+      UICtrl.showTotalSpends(ItemCtrl.getTotalSpends());
 
       // Load event listeners
       loadEventListeners();
