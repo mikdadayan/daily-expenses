@@ -56,6 +56,9 @@ const StorageCtrl = (function () {
         console.log("Oops there is not element in ls");
       }
     },
+    removeAllFromStorage: function(){
+      localStorage.removeItem("items");
+    }
   };
 })();
 
@@ -427,6 +430,7 @@ const App = (function (ItemCtrl, UICtrl, StorageCtrl) {
   function deleteItemsSubmit(e) {
     e.preventDefault(e);
     ItemCtrl.removeAllItems();
+    StorageCtrl.removeAllFromStorage();
     UICtrl.deleteAllFromUI();
     UICtrl.hideList();
     // Clear input fields after adding new item
