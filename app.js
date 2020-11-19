@@ -28,7 +28,6 @@ const StorageCtrl = (function () {
     },
     updateAndStoreItem: function (updatedItem) {
       let items = [];
-      console.log(updatedItem);
       // Check if there are any items in local storage
       if (localStorage.getItem("items") !== null) {
         items = JSON.parse(localStorage.getItem("items"));
@@ -56,9 +55,9 @@ const StorageCtrl = (function () {
         console.log("Oops there is not element in ls");
       }
     },
-    removeAllFromStorage: function(){
+    removeAllFromStorage: function () {
       localStorage.removeItem("items");
-    }
+    },
   };
 })();
 
@@ -344,10 +343,10 @@ const App = (function (ItemCtrl, UICtrl, StorageCtrl) {
 
   // Item Edit icon click
   function itemEditClick(e) {
-    console.log("What the fuck")
-    console.log(e.target)
+    console.log("What the fuck");
+    console.log(e.target);
     if (e.target.classList.contains("edit-item")) {
-      console.log("fusck is this")
+      console.log("fusck is this");
       const listID = e.target.parentNode.parentNode.id;
       const id = parseInt(listID.split("-")[1]);
       const itemToEdit = ItemCtrl.getItemById(id);
