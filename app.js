@@ -139,7 +139,6 @@ const ItemCtrl = (function () {
         deletedItem = item;
       });
       data.items = newItemsList;
-      console.log(deletedItem);
       return deletedItem;
     },
     clearCurrentItem: function () {
