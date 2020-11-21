@@ -257,7 +257,6 @@ const UICtrl = (function () {
     },
     updateListAfterDelete: function (item) {
       const itemID = `#item-${item.id}`;
-      console.log(itemID);
       const itemToDelete = document.querySelector(itemID);
       itemToDelete.remove();
     },
