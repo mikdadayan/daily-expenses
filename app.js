@@ -303,7 +303,6 @@ const App = (function (ItemCtrl, UICtrl, StorageCtrl) {
       .querySelector(UISelectors.clearBtn)
       .addEventListener("click", deleteItemsSubmit);
   };
-  // console.log(itemAddSubmit)
 
   // Add item submit
   const itemAddSubmit = function (e) {
@@ -341,7 +340,6 @@ const App = (function (ItemCtrl, UICtrl, StorageCtrl) {
 
   // Item Edit icon click
   function itemEditClick(e) {
-    console.log("What the fuck");
     console.log(e.target);
     if (e.target.classList.contains("edit-item")) {
       console.log("fusck is this");
