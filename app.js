@@ -277,7 +277,6 @@ const App = (function (ItemCtrl, UICtrl, StorageCtrl) {
     document
       .querySelector(UISelectors.itemForm)
       .addEventListener("submit", function (e) {
-        console.log("Daaaaaa");
         e.preventDefault();
       });
     // Add item event
