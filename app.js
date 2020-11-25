@@ -341,7 +341,6 @@ const App = (function (ItemCtrl, UICtrl, StorageCtrl) {
   function itemEditClick(e) {
     console.log(e.target);
     if (e.target.classList.contains("edit-item")) {
-      console.log("fusck is this");
       const listID = e.target.parentNode.parentNode.id;
       const id = parseInt(listID.split("-")[1]);
       const itemToEdit = ItemCtrl.getItemById(id);
