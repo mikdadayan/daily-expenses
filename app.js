@@ -338,13 +338,11 @@ const App = (function (ItemCtrl, UICtrl, StorageCtrl) {
   };
 
   // Item Edit icon click
-  function itemEditClick(e) {
-    console.log(e.target);
+  function itemEditClick(e) {;
     if (e.target.classList.contains("edit-item")) {
       const listID = e.target.parentNode.parentNode.id;
       const id = parseInt(listID.split("-")[1]);
       const itemToEdit = ItemCtrl.getItemById(id);
-      console.log(itemToEdit);
       ItemCtrl.setCurrentItem(itemToEdit);
       UICtrl.fillFormToUpdate(itemToEdit);
     }
