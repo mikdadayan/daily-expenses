@@ -363,7 +363,6 @@ const App = (function (ItemCtrl, UICtrl, StorageCtrl) {
         inputs.name.value,
         parseInt(inputs.price.value)
       );
-      console.log(updatedItem);
 
       // Set updated item into local storage
       StorageCtrl.updateAndStoreItem(updatedItem);
