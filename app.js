@@ -52,7 +52,7 @@ const StorageCtrl = (function () {
         });
         localStorage.setItem("items", JSON.stringify(items));
       } else {
-        console.log("Oops there is not element in ls");
+        console.log("Oops there are not elements in ls");
       }
     },
     removeAllFromStorage: function () {
